@@ -15,6 +15,9 @@ var app = require('express')(),           // start Express framework
 app.get('/', function (request, response) {
   response.sendfile(__dirname + '/index.html');
 });
+app.get('/client_config.js', function (request, response) {
+  response.sendfile(__dirname + '/client.js');
+});
 app.get('/client.js', function (request, response) {
   response.sendfile(__dirname + '/client.js');
 });

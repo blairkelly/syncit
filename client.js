@@ -1,6 +1,3 @@
-var partnerlocation = "10.0.1.8";
-var partnerport = 3500;
-
 var locationhostname = window.location.hostname;
 var serverip = locationhostname;
 
