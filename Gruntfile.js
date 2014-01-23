@@ -16,7 +16,7 @@ app.get('/', function (request, response) {
   response.sendfile(__dirname + '/index.html');
 });
 app.get('/client_config.js', function (request, response) {
-  response.sendfile(__dirname + '/client.js');
+  response.sendfile(__dirname + '/client_config.js');
 });
 app.get('/client.js', function (request, response) {
   response.sendfile(__dirname + '/client.js');
