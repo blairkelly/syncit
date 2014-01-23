@@ -6,10 +6,10 @@ config.partnerport = 3500;
 config.localport = 3000;
 
 var bp = "../TaihoPharmaUSAInc-DefaultPortfolio-2013-CorporateSitePhaseI/Web/";
-var afe = "/*.*";
+var afe = "/**/*.*";
 
 config.filestowatch = [
-						bp+"*.config",
+						bp+"*.*",
 						bp+"about"+afe,
 						bp+"App_Data"+afe,
 						bp+"careers"+afe,
