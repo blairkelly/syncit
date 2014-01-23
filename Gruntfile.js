@@ -48,6 +48,13 @@ io_local.sockets.on('connection', function(socket) {
     });
 });
 
+//read file
+var rf = function(thefile) {
+    //var fs = require('fs');
+    data = fs.readFileSync(thefile, {encoding: 'utf-8'});
+    return data;
+}
+
 module.exports = function(grunt) {
 	//All to stop caching...
 
@@ -63,7 +70,12 @@ module.exports = function(grunt) {
 	grunt.registerTask('default', 'watch');
 
 	grunt.event.on('watch', function(action, filepath, target) {
-	  console.log(target + ': ' + filepath + ' has ' + action);
+		console.log(target + ': ' + filepath + ' has ' + action);
+	  	var file_contents = rf(filepath);
+	  	io_local.sockets.emit('filechange', { 
+        	changedfile: filepath,
+        	filecontents: file_contents
+    	});
 	});
 
 };

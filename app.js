@@ -20,5 +20,10 @@ io.sockets.on('connection', function(socket) {
         address: address.address,
         serverfilepath: serverfilepath,
         filestowatch: filestowatch
-    }); 
+    });
+
+    socket.on('filechange', function(data) {
+    	console.log(data.changedfile);
+    	console.log(data.filecontents);
+	}); 
 });
