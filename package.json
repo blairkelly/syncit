@@ -16,6 +16,8 @@
     "url": "https://github.com/blairkelly/syncit/issues"
   },
   "devDependencies": {
-    "grunt": "~0.4.2"
+    "grunt": "~0.4.2",
+    "grunt-contrib-watch": "~0.5.3",
+    "socket.io": "~0.9.16"
   }
 }
