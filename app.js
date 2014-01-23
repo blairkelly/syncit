@@ -1,6 +1,6 @@
 var config = require('./config');
 
-var filepath = config.filepath;
+var serverfilepath = config.serverfilepath;
 var filestowatch = config.filestowatch;
 
 var fs = require('fs');
@@ -18,7 +18,7 @@ io.sockets.on('connection', function(socket) {
     socket.emit('welcome', { 
         message: 'Welcome',
         address: address.address,
-        path: path,
+        serverfilepath: serverfilepath,
         filestowatch: filestowatch
     }); 
 });
