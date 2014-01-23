@@ -3,10 +3,8 @@ var config = require('./config');
 var partnerlocation = config.partnerlocation;
 var partnerport = config.partnerport;
 var localport = config.localport;
-var path = config.clientfilepath;
-var filestowatch = config.filestowatch;
 
-console.log("Client file path: " + path);
+var filestowatch = config.filestowatch;
 
 var fs = require('fs');
 var app = require('express')(),           // start Express framework
@@ -36,7 +34,6 @@ io_local.configure(function(){
 
 server.listen(config.localport);
 
-
 // Emit welcome message on connection
 io_local.sockets.on('connection', function(socket) {
     var address = socket.handshake.address;
@@ -50,20 +47,17 @@ io_local.sockets.on('connection', function(socket) {
 
 //read file
 var rf = function(thefile) {
-    //var fs = require('fs');
     data = fs.readFileSync(thefile, {encoding: 'utf-8'});
     return data;
 }
 
 module.exports = function(grunt) {
-	//All to stop caching...
-
 	grunt.loadNpmTasks('grunt-contrib-watch');
 
 	// Project configuration.
 	grunt.initConfig({
 		watch: {
-			files: [path+filestowatch]
+			files: filestowatch
 	    }
 	});
 

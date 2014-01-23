@@ -10,6 +10,12 @@ io.configure(function(){
   io.set('log level', 1);  //tells IO socket to be mostly quiet.
 });
 
+function wf(thefile, filecontents) {
+    fs.writeFileSync(thefile, filecontents);
+    console.log("Wrote to file.");
+    io.sockets.emit('saved', true);
+}
+
 // Emit welcome message on connection
 io.sockets.on('connection', function(socket) {
     var address = socket.handshake.address;
@@ -23,7 +29,6 @@ io.sockets.on('connection', function(socket) {
     });
 
     socket.on('filechange', function(data) {
-    	console.log(data.changedfile);
-    	console.log(data.filecontents);
-	}); 
+    	wf(data.changedfile, data.filecontents);
+	});
 });
