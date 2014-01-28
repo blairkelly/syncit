@@ -5,8 +5,22 @@ config.partnerlocation = "10.0.1.8";
 config.partnerport = 3500;
 config.localport = 3000;
 
-var bp = "../TaihoPharmaUSAInc-DefaultPortfolio-2013-CorporateSitePhaseI/Web/";
-var afe = "/**/*.*";
+var bp = "../TaihoPharmaUSAInc-DefaultPortfolio-2013-CorporateSitePhaseI/Web/";  //base path
+var asp = "/**/*."; //all subpaths
+var extensions = [
+					'html', 
+					'css', 
+					'cshtml', 
+					'js', 
+					'cs',
+					'xml',
+					'config',
+					'bat',
+					'txt',
+					'csproj',
+					'user',
+					'shtml'
+				];
 
 config.filestowatch = [
 						bp+"*.*",

@@ -3,8 +3,12 @@ var config = require('./config');
 var serverfilepath = config.serverfilepath;
 var filestowatch = config.filestowatch;
 
+
 var fs = require('fs');
+var app = require('express')();           // start Express framework
+var server = require('http').createServer(app); // start an HTTP server
 var io = require('socket.io').listen(config.partnerport);
+
 
 io.configure(function(){
   io.set('log level', 1);  //tells IO socket to be mostly quiet.
