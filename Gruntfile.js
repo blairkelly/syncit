@@ -1,9 +1,5 @@
 var config = require('./config');
 
-var partnerlocation = config.partnerlocation;
-var partnerport = config.partnerport;
-var localport = config.localport;
-
 var filestowatch = config.filestowatch;
 
 var fs = require('fs');
@@ -35,7 +31,7 @@ io_local.configure(function(){
   io_local.set('log level', 1);  //tells IO socket to be mostly quiet.
 });
 
-server.listen(config.localport);
+server.listen(config.localmachinegruntport);
 
 // Emit welcome message on connection
 io_local.sockets.on('connection', function(socket) {

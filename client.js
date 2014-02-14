@@ -4,7 +4,7 @@ var serverip = locationhostname;
 var locationport = window.location.port;
 var serverport = locationport;
 
-var socket_remote = io.connect('//'+partnerlocation+':'+partnerport);
+var socket_remote = io.connect('//'+remote_machine_address+':'+remote_machine_port);
 socket_remote.on('welcome', function(data) {
     console.log("Connected remote");
     console.log(data.message);

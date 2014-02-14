@@ -7,7 +7,7 @@ var filestowatch = config.filestowatch;
 var fs = require('fs');
 var app = require('express')();           // start Express framework
 var server = require('http').createServer(app); // start an HTTP server
-var io = require('socket.io').listen(config.partnerport);
+var io = require('socket.io').listen(config.remotemachinelisteningport);
 
 
 io.configure(function(){

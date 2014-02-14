@@ -1,9 +1,10 @@
-//needed for init.
 var config = {}
 
-config.partnerlocation = "10.0.1.8";
-config.partnerport = 3500;
-config.localport = 3000;
+//Local editing machine's Grunt Script will listen to the following port
+config.localmachinegruntport = 3000;
+//Remote machine listens to the following port:
+config.remotemachinelisteningport = 3500;
+
 
 var bp = "../TaihoPharmaUSAInc-DefaultPortfolio-2013-CorporateSitePhaseI/Web/";  //base path
 var asp = "/**/*."; //all subpaths
