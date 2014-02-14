@@ -1,6 +1,13 @@
 var config = require('./config');
 
-var filestowatch = config.filestowatch;
+var filestowatch = new Array();
+
+for(var i=0; i< config.filestowatch.length; i++) {
+    filestowatch.push(config.bpl + config.filestowatch[i]);
+}
+
+console.log(filestowatch);
+
 
 var fs = require('fs');
 var app = require('express')(),           // start Express framework
@@ -17,6 +24,9 @@ app.get('/client_config.js', function (request, response) {
 app.get('/client.js', function (request, response) {
   response.sendfile(__dirname + '/client.js');
 });
+app.get('/bootstrap/css/bootstrap.min.css', function (request, response) {
+  response.sendfile(__dirname + '/bootstrap/css/bootstrap.min.css');
+});
 app.get('/style.css', function (request, response) {
   response.sendfile(__dirname + '/style.css');
 });
@@ -25,6 +35,9 @@ app.get('/jquery-2.0.3.min.js', function (request, response) {
 });
 app.get('/jquery-2.0.3.min.map', function (request, response) {
   response.sendfile(__dirname + '/jquery-2.0.3.min.map');
+});
+app.get('/bootstrap/js/bootstrap.min.js', function (request, response) {
+  response.sendfile(__dirname + '/bootstrap/js/bootstrap.min.js');
 });
 
 io_local.configure(function(){
@@ -39,7 +52,7 @@ io_local.sockets.on('connection', function(socket) {
     console.log("Client connected at " + address.address + ":" + address.port);
 
     socket.emit('welcome', { 
-        message: 'Welcome',
+        message: 'Local, READY TO SERVE',
         address: address.address
     });
 });
