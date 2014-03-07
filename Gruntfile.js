@@ -8,37 +8,14 @@ for(var i=0; i< config.filestowatch.length; i++) {
 
 console.log(filestowatch);
 
-
 var fs = require('fs');
-var app = require('express')(),           // start Express framework
-    server = require('http').createServer(app), // start an HTTP server
-    io_local = require('socket.io').listen(server);
-
-
-app.get('/', function (request, response) {
-  response.sendfile(__dirname + '/index.html');
+var express = require('express');
+var app = express();           // start Express framework
+app.configure(function(){
+    app.use(express.static(__dirname + '/public'));
 });
-app.get('/client_config.js', function (request, response) {
-  response.sendfile(__dirname + '/client_config.js');
-});
-app.get('/client.js', function (request, response) {
-  response.sendfile(__dirname + '/client.js');
-});
-app.get('/bootstrap/css/bootstrap.min.css', function (request, response) {
-  response.sendfile(__dirname + '/bootstrap/css/bootstrap.min.css');
-});
-app.get('/style.css', function (request, response) {
-  response.sendfile(__dirname + '/style.css');
-});
-app.get('/jquery-2.0.3.min.js', function (request, response) {
-  response.sendfile(__dirname + '/jquery-2.0.3.min.js');
-});
-app.get('/jquery-2.0.3.min.map', function (request, response) {
-  response.sendfile(__dirname + '/jquery-2.0.3.min.map');
-});
-app.get('/bootstrap/js/bootstrap.min.js', function (request, response) {
-  response.sendfile(__dirname + '/bootstrap/js/bootstrap.min.js');
-});
+var server = require('http').createServer(app); // start an HTTP server
+var io_local = require('socket.io').listen(server);
 
 io_local.configure(function(){
   io_local.set('log level', 1);  //tells IO socket to be mostly quiet.

@@ -1,7 +1,12 @@
 var config = require('./config');
+var http = require('http');
 
 var fs = require('fs');
-var app = require('express')();           // start Express framework
+var express = require('express');
+var app = express();           // start Express framework
+app.configure(function(){
+    app.use(express.static(__dirname + '/public'));
+});
 var server = require('http').createServer(app); // start an HTTP server
 var io = require('socket.io').listen(config.remotemachinelisteningport);
 
@@ -10,10 +15,13 @@ io.configure(function(){
   io.set('log level', 1);  //tells IO socket to be mostly quiet.
 });
 
-function wf(thefile, filecontents) {
+function wf(thefile, filecontents, docallback) {
     fs.writeFile(thefile, filecontents, function () {
         console.log("Callback: Wrote to file.");
         io.sockets.emit('saved', true);
+        if(docallback) {
+          docallback();
+        }
     });
 }
 
