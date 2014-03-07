@@ -25,6 +25,9 @@ function wf(thefile, filecontents, docallback) {
     });
 }
 
+var download_queue = "";
+var downloading = "";
+
 // Emit welcome message on connection
 io.sockets.on('connection', function(socket) {
     var address = socket.handshake.address;
@@ -44,6 +47,8 @@ io.sockets.on('connection', function(socket) {
             //path contains a backslash. replace any existing forward slashes with backslashes.
             modified_file_location = modified_file_location.replace(/\//g, '\\');
         }
+        //check if the file is in the "currently downloading" queue
+
         console.log("modified_file_location: " + modified_file_location);
         wf(modified_file_location, data.filecontents);
 	});

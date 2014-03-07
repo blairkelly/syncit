@@ -9,6 +9,7 @@ for(var i=0; i< config.filestowatch.length; i++) {
 console.log(filestowatch);
 
 var fs = require('fs');
+var path = require('path');
 var express = require('express');
 var app = express();           // start Express framework
 app.configure(function(){
@@ -36,7 +37,7 @@ io_local.sockets.on('connection', function(socket) {
 
 //read file
 var rf = function(thefile) {
-    data = fs.readFileSync(thefile, {encoding: 'utf-8'});
+    data = fs.readFile(thefile, {encoding: 'utf-8'});
     return data;
 }
 
@@ -54,11 +55,28 @@ module.exports = function(grunt) {
 
 	grunt.event.on('watch', function(action, filepath, target) {
 		console.log(target + ': ' + filepath + ' has ' + action);
-	  	var file_contents = rf(filepath);
-	  	io_local.sockets.emit('filechange', { 
+	  	
+      
+      var file_contents = rf(filepath);
+	  	io_local.sockets.emit('filechange', {
         	changedfile: filepath,
         	filecontents: file_contents
     	});
+
 	});
 
 };
+
+app.get('/source/*', function (request, response) {
+    //console.log(request.originalUrl);
+    //console.log(request.params[0]);
+    var requestedFile = path.resolve(config.bpl + '/' + request.params[0]);
+    //response.send(requestedFile);
+    //response.sendfile(requestedFile);
+    response.sendfile(requestedFile, function (error) {
+      //upon completion.
+      if(error) {
+        console.log('Error trying to send file.');
+      }
+    });
+});
