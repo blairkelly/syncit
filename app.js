@@ -43,7 +43,49 @@ io.sockets.on('connection', function(socket) {
     });
 
     socket.on('filechange', function(data) {
-        console.log("changed file (as sent from server): " + data.changedfile);
+        console.log(" ");
+        var add_item_to_list = function (list, item) {
+            if(list.match(item)) {
+                //item already in list, do nothing
+            } else {
+                //not in list yet
+                if(list.length > 0) {
+                    list+=',';
+                }
+                list+=item;
+            }
+            return list;
+        }
+        var remove_item_from_list = function(list, item) {
+            var n = list.indexOf(item);
+            if(n!=0) {
+                list = list.replace(','+item, '');
+            } else {
+                list = list.replace(item, '');
+            }
+            if(list.charAt(0) == ','){
+                list = list.substring(1, list.length);
+            }
+            return list;
+        }
+        var get_file = function (fp) {
+            console.log("Getting: " + fp);
+            downloading = add_item_to_list(downloading, fp);
+            setTimeout(function() {
+                downloading = remove_item_from_list(downloading, fp);
+                //check if the file is in download queue
+                if(download_queue.match(fp)) {
+                    //it's in the download queue.
+                    //remove from download queue.
+                    //add to downloading
+                    download_queue = remove_item_from_list(download_queue, fp);
+                    get_file(fp);
+                }
+                console.log(" ");
+                console.log('downloading: ' + downloading);
+                console.log('download_queue: ' + download_queue);
+            },9999);
+        }
 
         var modified_request_path = data.changedfile;
         if (  modified_request_path.match(/\\/)  ) {
@@ -55,31 +97,18 @@ io.sockets.on('connection', function(socket) {
             modified_file_location = modified_file_location.replace(/\//g, '\\');
         }
         modified_file_location = path.resolve(modified_file_location);  // <-- this is where it needs to go.
-        //check if the file is in the "currently downloading" queue
 
         console.log("modified_request_path: " + modified_request_path);
         console.log("modified_file_location: " + modified_file_location);
 
         if(downloading.match(modified_request_path)) {
             //already downloading this file. add to download_queue for download later.
-            if(download_queue.match(modified_request_path)) {
-                //already in download queue, do nothing.
-            } else {
-                if(download_queue.length > 0) {
-                    download_queue+=',';
-                }
-                download_queue+=modified_request_path;
-            }
+            download_queue = add_item_to_list(download_queue, modified_request_path);
+            console.log("Queued: " + modified_request_path);
         } else {
             //not downloading yet.
-            if(downloading.length > 0) {
-                downloading+=',';
-            }
-            downloading+=modified_request_path;
+            get_file(modified_request_path);
         }
-
-        console.log('downloading: ' + downloading);
-        console.log('download_queue: ' + download_queue);
 
         //wf(modified_file_location, data.filecontents);
 	});
