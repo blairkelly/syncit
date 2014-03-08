@@ -54,14 +54,24 @@ module.exports = function(grunt) {
 	grunt.registerTask('default', 'watch');
 
 	grunt.event.on('watch', function(action, filepath, target) {
-		console.log(target + ': ' + filepath + ' has ' + action);
-	  	
-      
+		  console.log(target + ': ' + filepath + ' has ' + action);
+      var resolved_filepath = path.resolve(filepath);
+      //console.log("RESOLVED FILEPATH: " + resolved_filepath);
+      var remove_from_path = path.resolve(config.bpl);
+      var prepped_path = resolved_filepath.replace(remove_from_path, '');
+      console.log("prepped path: " + prepped_path);
+
+      io_local.sockets.emit('filechange', {
+          changedfile: prepped_path
+      });
+
+      /*
       var file_contents = rf(filepath);
 	  	io_local.sockets.emit('filechange', {
         	changedfile: filepath,
         	filecontents: file_contents
     	});
+      */
 
 	});
 
