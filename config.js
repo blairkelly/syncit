@@ -9,7 +9,7 @@ config.localmachinegruntport = 3456;
 config.remotemachinelisteningport = 3500;
 
 config.bpl = "../test_local";  	//base path
-config.bpr = "../test_remote";		//base path remote, if different from local
+config.bpr = "../test_remotes";		//base path remote, if different from local
 
 var nsp = "*."; 				//no sub-paths
 var asp = "**/*."; 				//all subpaths

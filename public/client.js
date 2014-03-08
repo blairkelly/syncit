@@ -9,7 +9,6 @@ socket.on('welcome', function(data) {
 	console.log("Connected LOCAL");
     console.log(data.message);
     console.log('Handshake address: ' + data.address);
-
     var socket_remote = io.connect('//'+remote_machine_address+':'+remote_machine_port);
 	socket_remote.on('welcome', function(data) {
 	    console.log("Connected remote");
@@ -17,7 +16,6 @@ socket.on('welcome', function(data) {
 	    console.log('Handshake address: ' + data.address);
 	    socket.emit('get', 'config');
 	});
-
     socket.on('filechange', function(data) {
 	    socket_remote.emit('filechange', data);
 	});

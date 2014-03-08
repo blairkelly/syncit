@@ -96,7 +96,17 @@ io.sockets.on('connection', function(socket) {
                 var modified_file_location = _BPR + data.changedfile;
                 modified_file_location = path.resolve(modified_file_location);  // <-- this is where it needs to go.
                 console.log("modified_file_location: " + modified_file_location);
-                res.pipe(fs.createWriteStream(modified_file_location));
+                var dirname = path.dirname(modified_file_location);
+                console.log("dirname: " + dirname);
+                fs.exists(dirname, function(exists) {
+                    if(exists) {
+                        res.pipe(fs.createWriteStream(modified_file_location));
+                    } else {
+                        fs.mkdir(dirname, function () {
+                            res.pipe(fs.createWriteStream(modified_file_location));
+                        });
+                    }
+                });
                 res.on('end', function(e) {
                     console.log("Finished getting " + fp);
                     downloading = remove_item_from_list(downloading, fp);
