@@ -32,17 +32,22 @@ var downloading = "";
 // Emit welcome message on connection
 io.sockets.on('connection', function(socket) {
     var address = socket.handshake.address;
+    var _BPR = null;
     console.log("Client connected at " + address.address + ":" + address.port);
     socket.emit('welcome', { 
         message: 'HELLO FROM REMOTE',
         address: address.address,
-        basepathremote: config.bpr,
+        basepathremote: _BPR,
         filestowatch: config.filestowatch
+    });
+    socket.on('BPR', function(data) {
+        _BPR = data;
+        console.log("_BPR set to " + _BPR);
     });
     socket.on('filedeleted', function(data) {
         console.log(" ");
         console.log("DELETED");
-        var deleted_path = config.bpr + data.deletedfile;
+        var deleted_path = _BPR + data.deletedfile;
         var resolved_deleted_path = path.resolve(deleted_path);  //looks like path.resolve fixes slash direction...
         console.log(resolved_deleted_path);
         fs.unlink(resolved_deleted_path, function (err) {
@@ -86,7 +91,7 @@ io.sockets.on('connection', function(socket) {
               path: '/source/' + fp
             };
             http.get(get_file_options, function(res) {
-                var modified_file_location = config.bpr + data.changedfile;
+                var modified_file_location = _BPR + data.changedfile;
                 modified_file_location = path.resolve(modified_file_location);  // <-- this is where it needs to go.
                 console.log("modified_file_location: " + modified_file_location);
                 res.pipe(fs.createWriteStream(modified_file_location));

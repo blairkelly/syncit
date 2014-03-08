@@ -33,6 +33,12 @@ io_local.sockets.on('connection', function(socket) {
         message: 'Local, READY TO SERVE',
         address: address.address
     });
+
+    socket.on('give', function(data) {
+      if(data == 'BPR') {
+        socket.emit('BPR', config.bpr);
+      }
+    });
 });
 
 //read file
