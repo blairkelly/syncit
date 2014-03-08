@@ -54,35 +54,25 @@ module.exports = function(grunt) {
 	grunt.registerTask('default', 'watch');
 
 	grunt.event.on('watch', function(action, filepath, target) {
-		  console.log(target + ': ' + filepath + ' has ' + action);
+		  console.log(target + ': ' + filepath + ' has been ' + action);
       var resolved_filepath = path.resolve(filepath);
-      //console.log("RESOLVED FILEPATH: " + resolved_filepath);
       var remove_from_path = path.resolve(config.bpl);
       var prepped_path = resolved_filepath.replace(remove_from_path, '');
       console.log("prepped path: " + prepped_path);
-
-      io_local.sockets.emit('filechange', {
-          changedfile: prepped_path
-      });
-
-      /*
-      var file_contents = rf(filepath);
-	  	io_local.sockets.emit('filechange', {
-        	changedfile: filepath,
-        	filecontents: file_contents
-    	});
-      */
-
+      if(action != 'deleted') {
+        io_local.sockets.emit('filechange', {
+            changedfile: prepped_path
+        });
+      } else if (action == 'deleted') {
+        io_local.sockets.emit('filedeleted', {
+            deletedfile: prepped_path
+        });
+      }
 	});
-
 };
 
 app.get('/source/*', function (request, response) {
-    //console.log(request.originalUrl);
-    //console.log(request.params[0]);
     var requestedFile = path.resolve(config.bpl + '/' + request.params[0]);
-    //response.send(requestedFile);
-    //response.sendfile(requestedFile);
     response.sendfile(requestedFile, function (error) {
       //upon completion.
       if(error) {

@@ -20,3 +20,6 @@ socket.on('welcome', function(data) {
 socket.on('filechange', function(data) {
     socket_remote.emit('filechange', data);
 });
+socket.on('filedeleted', function(data) {
+    socket_remote.emit('filedeleted', data);
+});

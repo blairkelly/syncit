@@ -17,7 +17,7 @@ var sp_flag = nsp;				//sub path or no sub path flag
 
 var watch_basepath = true;		//watch for files in the basepath?
 
-var textual_files = [
+var extensions = [
 					'html', 
 					'css', 
 					'cshtml',
@@ -30,7 +30,14 @@ var textual_files = [
 					'txt',
 					'csproj',
 					'user',
-					'shtml'
+					'shtml',
+					'jade',
+					'sass',
+					'scss',
+					'jpg',
+					'jpeg',
+					'mpeg',
+					'mp4'
 				];
 
 config.where_to_watch_including_subpaths = [
@@ -46,8 +53,8 @@ var ftw_entry = "";
 if(watch_basepath) {
 	//add textual files to watch list
 	sp_flag = nsp; //set sup path flag to no sub paths.
-	for(var i=0; i<textual_files.length; i++) {
-		ftw_entry = '/'+sp_flag+textual_files[i];
+	for(var i=0; i<extensions.length; i++) {
+		ftw_entry = '/'+sp_flag+extensions[i];
 		config.filestowatch.push(ftw_entry);
 	}
 }
