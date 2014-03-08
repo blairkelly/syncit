@@ -34,9 +34,13 @@ io_local.sockets.on('connection', function(socket) {
         address: address.address
     });
 
-    socket.on('give', function(data) {
-      if(data == 'BPR') {
-        socket.emit('BPR', config.bpr);
+    socket.on('get', function(data) {
+      if(data == 'config') {
+        var config_to_send = {
+          BPR: config.bpr,
+          GETPORT: config.localmachinegruntport
+        }
+        socket.emit('config', config_to_send);
       }
     });
 });

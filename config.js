@@ -4,7 +4,7 @@ var config = {}
 //remote is the machine running the server
 
 //Local editing machine's Grunt Script will listen to the following port
-config.localmachinegruntport = 3000;
+config.localmachinegruntport = 3456;
 //Remote machine listens to the following port:
 config.remotemachinelisteningport = 3500;
 

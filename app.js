@@ -33,16 +33,18 @@ var downloading = "";
 io.sockets.on('connection', function(socket) {
     var address = socket.handshake.address;
     var _BPR = null;
+    var GETPORT = null;
     console.log("Client connected at " + address.address + ":" + address.port);
     socket.emit('welcome', { 
         message: 'HELLO FROM REMOTE',
         address: address.address,
-        basepathremote: _BPR,
         filestowatch: config.filestowatch
     });
-    socket.on('BPR', function(data) {
-        _BPR = data;
+    socket.on('config', function(data) {
+        _BPR = data.BPR;
         console.log("_BPR set to " + _BPR);
+        GETPORT = data.GETPORT;
+        console.log("GETPORT set to " + GETPORT);
     });
     socket.on('filedeleted', function(data) {
         console.log(" ");
@@ -87,7 +89,7 @@ io.sockets.on('connection', function(socket) {
             downloading = add_item_to_list(downloading, fp);
             var get_file_options = {
               host: address.address,
-              port: config.localmachinegruntport,
+              port: GETPORT,
               path: '/source/' + fp
             };
             http.get(get_file_options, function(res) {

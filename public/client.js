@@ -15,7 +15,7 @@ socket.on('welcome', function(data) {
 	    console.log("Connected remote");
 	    console.log(data.message);
 	    console.log('Handshake address: ' + data.address);
-	    socket.emit('give', 'BPR');
+	    socket.emit('get', 'config');
 	});
 
     socket.on('filechange', function(data) {
@@ -24,7 +24,7 @@ socket.on('welcome', function(data) {
 	socket.on('filedeleted', function(data) {
 	    socket_remote.emit('filedeleted', data);
 	});
-	socket.on('BPR', function(data) {
-	    socket_remote.emit('BPR', data);
+	socket.on('config', function(data) {
+	    socket_remote.emit('config', data);
 	});
 });
