@@ -44,7 +44,12 @@ var extensions = [
 var include_specific_path = [
 						"../"
 						];  //includes a specfic path - IGNORES BASEPATH. Does not include the path's subpaths
-var include_path_and_its_subpaths = [
+/*
+var basepath_include_specific_path = [
+						"wp-content"
+						]; //includes a specfic paths within basepath, ignores path's subpaths
+*/
+var basepath_include_path_and_its_subpaths = [
 						"wp-content"
 						];
 
@@ -64,9 +69,17 @@ if(watch_basepath) {
 		config.filestowatch.push(ftw_entry);
 	}
 }
-for(var i=0; i<include_path_and_its_subpaths.length; i++) {
+/*
+for(var i=0; i<basepath_include_specific_path.length; i++) {
 	for(var j=0; j<extensions.length; j++) {
-		ftw_entry = config.bpl+'/'+include_path_and_its_subpaths[i]+'/'+asp+extensions[j];
+		ftw_entry = config.bpl+'/'+basepath_include_specific_path[i]+'/'+nsp+extensions[j];
+		config.filestowatch.push(ftw_entry);
+	}
+}
+*/
+for(var i=0; i<basepath_include_path_and_its_subpaths.length; i++) {
+	for(var j=0; j<extensions.length; j++) {
+		ftw_entry = config.bpl+'/'+basepath_include_path_and_its_subpaths[i]+'/'+asp+extensions[j];
 		config.filestowatch.push(ftw_entry);
 	}
 }
