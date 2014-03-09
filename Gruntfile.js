@@ -23,6 +23,7 @@ io_local.configure(function(){
 });
 
 server.listen(config.localmachinegruntport);
+console.log("To connect, use port " + config.localmachinegruntport);
 
 // Emit welcome message on connection
 io_local.sockets.on('connection', function(socket) {
@@ -65,17 +66,21 @@ module.exports = function(grunt) {
 
 	grunt.event.on('watch', function(action, filepath, target) {
 		  console.log(target + ': ' + filepath + ' has been ' + action);
-      var resolved_filepath = path.resolve(filepath);
-      var remove_from_path = path.resolve(config.bpl);
-      var prepped_path = resolved_filepath.replace(remove_from_path, '');
-      console.log("prepped path: " + prepped_path);
+      if(fs.existsSync(filepath)) {
+        var resolved_filepath = path.resolve(filepath);
+        var remove_from_path = path.resolve(config.bpl);
+        var prepped_path = resolved_filepath.replace(remove_from_path, '');
+        console.log("prepped path: " + prepped_path);
+      }
       if(action != 'deleted') {
         io_local.sockets.emit('filechange', {
-            changedfile: prepped_path
+            changedfile: prepped_path,
+            isDir: fs.lstatSync(filepath).isDirectory()
         });
       } else if (action == 'deleted') {
+        console.log("DELETED: " + filepath);
         io_local.sockets.emit('filedeleted', {
-            deletedfile: prepped_path
+            deletedfile: filepath
         });
       }
 	});
