@@ -8,8 +8,8 @@ config.localmachinegruntport = 3456;
 //Remote machine listens to the following port:
 config.remotemachinelisteningport = 3500;
 
-config.bpl = "../test_local";  	//base path
-config.bpr = "../test_remotes";		//base path remote, if different from local
+config.bpl = "../blairkelly";  	//base path
+config.bpr = config.bpl;		//base path remote, if different from local
 
 var nsp = "*."; 				//no sub-paths
 var asp = "**/*."; 				//all subpaths
@@ -40,21 +40,33 @@ var extensions = [
 					'mp4'
 				];
 
-config.where_to_watch_including_subpaths = [
-						"subpaths"
-						];
-config.where_to_watch_excluding_subpaths = [
-						"no_subpaths"
+
+var include_specific_path = [
+						"../"
+						];  //includes a specfic path - IGNORES BASEPATH. Does not include the path's subpaths
+var include_path_and_its_subpaths = [
+						"wp-content"
 						];
 
 config.filestowatch = new Array();
 var ftw_entry = "";
 
+//add files to watch list
+for(var i=0; i<include_specific_path.length; i++) {
+	for(var j=0; j<extensions.length; j++) {
+		ftw_entry = include_specific_path[i]+nsp+extensions[j];
+		config.filestowatch.push(ftw_entry);
+	}
+}
 if(watch_basepath) {
-	//add textual files to watch list
-	sp_flag = nsp; //set sup path flag to no sub paths.
 	for(var i=0; i<extensions.length; i++) {
-		ftw_entry = '/'+sp_flag+extensions[i];
+		ftw_entry = config.bpl+'/'+nsp+extensions[i];
+		config.filestowatch.push(ftw_entry);
+	}
+}
+for(var i=0; i<include_path_and_its_subpaths.length; i++) {
+	for(var j=0; j<extensions.length; j++) {
+		ftw_entry = config.bpl+'/'+include_path_and_its_subpaths[i]+'/'+asp+extensions[j];
 		config.filestowatch.push(ftw_entry);
 	}
 }

@@ -3,7 +3,7 @@ var config = require('./config');
 var filestowatch = new Array();
 
 for(var i=0; i< config.filestowatch.length; i++) {
-    filestowatch.push(config.bpl + config.filestowatch[i]);
+    filestowatch.push(config.filestowatch[i]);
 }
 
 console.log(filestowatch);
