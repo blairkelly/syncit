@@ -17,7 +17,7 @@ There is currently a very annoying error where an ENOENT or EPERM error is throw
 This is probably due to a limitation in the grunt watch script. My research into the problem suggests it has
 something to do with grunt watch trying to access a folder in its watch list that no longer exists and is not
 correctly handling the error that is thrown. One suggestion I saw was to "not watch a folder you're going to delete,
-but to watch it's parent."
+but to watch it's parent." I have not found this to solve the problem anyhow.
 I will let this issue sit for a while in case it is fixed in the next grunt / grunt-watch releases... I'll live
 with the inconvenience for the time being, until I get fed up and fix it myself.
 */
