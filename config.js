@@ -8,8 +8,8 @@ config.localmachinegruntport = 3456;
 //Remote machine listens to the following port:
 config.remotemachinelisteningport = 3500;
 
-config.bpl = "../test_local";  	//base path
-config.bpr = "../test_remotes";		//base path remote, if different from local
+config.bpl = "../blairkelly";  	//base path
+config.bpr = config.bpl;		//base path remote, if different from local
 
 var nsp = "*."; 				//no sub-paths
 var asp = "**/*."; 				//all subpaths
@@ -40,24 +40,32 @@ var extensions = [
 					'mp4'
 				];
 
-config.where_to_watch_including_subpaths = [
-						"subpaths"
+var include_subpaths = [
+						"wp-content"
 						];
-config.where_to_watch_excluding_subpaths = [
-						"no_subpaths"
+var exclude_subpaths = [
+						"exclude_this_subpath"
 						];
 
 config.filestowatch = new Array();
 var ftw_entry = "";
 
+//add files to watch list
 if(watch_basepath) {
-	//add textual files to watch list
 	sp_flag = nsp; //set sup path flag to no sub paths.
 	for(var i=0; i<extensions.length; i++) {
 		ftw_entry = '/'+sp_flag+extensions[i];
 		config.filestowatch.push(ftw_entry);
 	}
 }
+sp_flag = asp; //set sup path flag to INCLUDE paths.
+for(var i=0; i<include_subpaths.length; i++) {
+	for(var j=0; j<extensions.length; j++) {
+		ftw_entry = '/'+include_subpaths[i]+'/'+sp_flag+extensions[j];
+		config.filestowatch.push(ftw_entry);
+	}
+}
+
 
 //needed to export
 module.exports = config;
