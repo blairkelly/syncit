@@ -48,13 +48,39 @@ io.sockets.on('connection', function(socket) {
     });
     socket.on('filedeleted', function(data) {
         console.log(" ");
-        console.log("DELETED");
+        console.log("DELETE");
         var deleted_path = _BPR + data.deletedfile;
         var resolved_deleted_path = path.resolve(deleted_path);  //looks like path.resolve fixes slash direction...
-        console.log(resolved_deleted_path);
-        fs.unlink(resolved_deleted_path, function (err) {
-          if (err) throw err;
-          console.log('successfully deleted');
+        console.log("resolved_deleted_path: " + resolved_deleted_path);
+        var dirname = path.dirname(resolved_deleted_path);
+        console.log("dirname is: " + dirname);
+        fs.exists(resolved_deleted_path, function(exists) {
+            if(exists) {
+                //check locally if path is file or directory.
+                if(fs.lstatSync(resolved_deleted_path).isDirectory()) {
+                    console.log("Is Directory.");
+                    fs.rmdir(resolved_deleted_path, function(err) {
+                        if (err) {
+                            console.log("There was an error: ");
+                            console.log(err);  
+                        } else {
+                            console.log('successfully deleted');
+                        }; 
+                    });
+                } else {
+                    console.log("Is File.");
+                    fs.unlink(resolved_deleted_path, function (err) {
+                        if (err) {
+                            console.log("There was an error: ");
+                            console.log(err);  
+                        } else {
+                            console.log('successfully deleted');
+                        };
+                    });
+                }
+            } else {
+                console.log("Doesn't exist, can't delete.");
+            }
         });
     });
     socket.on('filechange', function(data) {
@@ -85,44 +111,73 @@ io.sockets.on('connection', function(socket) {
             return list;
         }
         var get_file = function (fp) {
-            console.log("Getting: " + fp);
+            console.log("get_file: " + fp);
             downloading = add_item_to_list(downloading, fp);
             var get_file_options = {
               host: address.address,
               port: GETPORT,
               path: '/source/' + fp
             };
-            http.get(get_file_options, function(res) {
-                var modified_file_location = _BPR + data.changedfile;
-                modified_file_location = path.resolve(modified_file_location);  // <-- this is where it needs to go.
-                console.log("modified_file_location: " + modified_file_location);
-                var dirname = path.dirname(modified_file_location);
-                console.log("dirname: " + dirname);
-                fs.exists(dirname, function(exists) {
-                    if(exists) {
+            var modified_file_location = _BPR + data.changedfile;
+            modified_file_location = path.resolve(modified_file_location);  // <-- this is where it needs to go.
+            console.log("modified_file_location: " + modified_file_location);
+            var dirname = path.dirname(modified_file_location);
+            console.log("dirname: " + dirname);
+            var do_get = function () {
+                if(!data.isDir) {
+                    //it's not just a directory. GET the file.
+                    console.log("getting...");
+                    http.get(get_file_options, function(res) {
                         res.pipe(fs.createWriteStream(modified_file_location));
+                        res.on('end', function(e) {
+                            console.log("Finished getting " + fp);
+                            downloading = remove_item_from_list(downloading, fp);
+                            //check if the file is in download queue
+                            if(download_queue.match(fp)) {
+                                //it's in the download queue.
+                                //remove from download queue.
+                                //add to downloading
+                                download_queue = remove_item_from_list(download_queue, fp);
+                                get_file(fp);
+                            }
+                            console.log('downloading: ' + downloading);
+                            console.log('download_queue: ' + download_queue);
+                        });
+                    }).on('error', function(e) {
+                        console.log("HTTP GET ERROR: " + e.message);
+                    });
+                } else {
+                    console.log("Directory Only. Not getting.");
+                }
+            }
+            fs.exists(modified_file_location, function(exists) {
+                if(exists) {
+                    //excellent, do nothing.
+                    do_get();
+                } else {
+                    //doesn't exist
+                    console.log("directory does not exist. Creating...");
+                    //if it's a directory, then create the directory.
+                    if(data.isDir) {
+                        fs.mkdir(modified_file_location, function () {
+                            console.log("Successfully created directory.");
+                        });
                     } else {
-                        fs.mkdir(dirname, function () {
-                            res.pipe(fs.createWriteStream(modified_file_location));
+                        //it's not just a directory, it's a file.
+                        //check to make sure the directory exists, then fetch the file.
+                        fs.exists(dirname, function(exists) {
+                            if(exists) {
+                                //excellent, file does not exist but the directory does
+                                do_get();
+                            } else {
+                                fs.mkdir(dirname, function () {
+                                    console.log("Successfully created directory.");
+                                    do_get();
+                                });
+                            }
                         });
                     }
-                });
-                res.on('end', function(e) {
-                    console.log("Finished getting " + fp);
-                    downloading = remove_item_from_list(downloading, fp);
-                    //check if the file is in download queue
-                    if(download_queue.match(fp)) {
-                        //it's in the download queue.
-                        //remove from download queue.
-                        //add to downloading
-                        download_queue = remove_item_from_list(download_queue, fp);
-                        get_file(fp);
-                    }
-                    console.log('downloading: ' + downloading);
-                    console.log('download_queue: ' + download_queue);
-                });
-            }).on('error', function(e) {
-                console.log("get_recorded_ip_options ERROR: " + e.message);
+                }
             });
         }
         var modified_request_path = data.changedfile;
