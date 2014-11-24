@@ -8,7 +8,7 @@ config.localmachinegruntport = 3456;
 //Remote machine listens to the following port:
 config.remotemachinelisteningport = 3500;
 
-config.bpl = "../blairkelly";  	//base path
+config.bpl = "../bb_open";  	//base path
 config.bpr = config.bpl;		//base path remote, if different from local
 
 var nsp = "*."; 				//no sub-paths
@@ -52,6 +52,7 @@ if(watch_basepath) {
 	}
 }
 
+/*
 var include_specific_path = [
 						"../"
 						];  //includes a specfic path - IGNORES BASEPATH. Does not include the path's subpaths
@@ -71,7 +72,7 @@ for(var i=0; i<basepath_include_path_and_its_subpaths.length; i++) {
 		config.filestowatch.push(ftw_entry);
 	}
 }
-
+*/
 /*
 var basepath_include_specific_path = [
 						"wp-content",

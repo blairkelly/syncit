@@ -120,6 +120,7 @@ io.sockets.on('connection', function(socket) {
             };
             var modified_file_location = _BPR + data.changedfile;
             modified_file_location = path.resolve(modified_file_location);  // <-- this is where it needs to go.
+            modified_file_location = path.normalize(modified_file_location);
             console.log("modified_file_location: " + modified_file_location);
             var dirname = path.dirname(modified_file_location);
             console.log("dirname: " + dirname);
